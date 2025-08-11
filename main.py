@@ -1,4 +1,5 @@
 import pygame
+
 from classes.player import Player
 from classes.enemy import Enemy
 from classes.constant import WIDTH, HEIGHT, FPS, SHOOT_DELAY
@@ -17,3 +18,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
