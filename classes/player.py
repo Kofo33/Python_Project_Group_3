@@ -13,7 +13,7 @@ class Player:
         self.attack = attack
         self.level = level
         self.xp = xp
-        self.inventory = [{"name": "Fists", "bonus": 0}]
+        self.inventory = {"name": "Fists", "bonus": 0}
         self.equipped_weapon = self.inventory[0]
         self.skills = {
             "Basic Attack": {"damage": 0, "level": 1},
