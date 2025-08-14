@@ -12,6 +12,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 input_bg = pygame.image.load("assets/img/Background/bg_username.png").convert_alpha()
 # input_bg = pygame.transform.scale(input_bg, (WIDTH, HEIGHT))
 
+
 def combat(player, enemy, keys):
     action = None
     if keys == 1:  # Attack
@@ -66,7 +67,6 @@ def combat(player, enemy, keys):
 
     return None
 
-
 def get_username():
     """Prompt player to enter a username before the game starts."""
     username = ""
@@ -104,3 +104,4 @@ def get_username():
                         username += event.unicode
 
     return username
+

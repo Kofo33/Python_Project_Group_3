@@ -8,6 +8,7 @@ from classes.player import Player
 from game_logic import combat, get_username
 
 
+
 pygame.init()
 SCREEN_WIDTH = WIDTH
 SCREEN_HEIGHT = HEIGHT
@@ -21,6 +22,7 @@ FONT = pygame.font.SysFont("arial", 24)
 background_img = pygame.image.load("assets/img/Background/background.png").convert_alpha()
 
 #load victory and defeat images
+
 victory_img = pygame.image.load('assets/img/Icons/victory.png').convert_alpha()  # Add at the top of your script where other imports are made
 
 defeat_img = pygame.image.load('assets/img/Icons/defeat.png').convert_alpha()
@@ -71,8 +73,10 @@ def display_menu():
         mouse_pos = pygame.mouse.get_pos()
 
         # Handle events
+
         for event in pygame.event.get():  # it uses a for loop to iterate through events
             if event.type == pygame.QUIT: # checks for quit events by exiting the loop by setting run to False.
+
                 running = False
 
             # Mouse click
@@ -84,6 +88,7 @@ def display_menu():
                     print("Load clicked")
                 elif buttons[2][1].collidepoint(mouse_pos):
                     pygame.quit()   # to close the game properly.
+
                     sys.exit()
 
             # Keyboard navigation
@@ -96,6 +101,7 @@ def display_menu():
                     if selected_button == 0:
                        username = get_username()
                        display_combat(username)  # Replace with actual combat function
+
                     elif selected_button == 1:
                         print("Load selected")
                     elif selected_button == 2:
@@ -123,7 +129,9 @@ def display_menu():
     return None
 
 
+
 def display_combat(username):
+
     running = True
     clock = pygame.time.Clock()
     end_state = None
@@ -141,10 +149,10 @@ def display_combat(username):
 
     font = pygame.font.SysFont('Comic Sans MS', 25)
 
+
     print(f"This is the username {username}")
 
     while running:
-
 
         screen.blit(background_img, (0, -50))
 
