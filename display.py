@@ -1,63 +1,44 @@
 import sys
 import pygame
-import random
-from classes.constant import WIDTH, HEIGHT, FPS, WHITE, RED, BLACK,YELLOW
+from classes.constant import WIDTH, HEIGHT, FPS, WHITE, RED, BLACK, YELLOW
 from classes.enemy import Enemy
 from classes.health_bar import HealthBar
 from classes.player import Player
 from game_logic import combat, get_username
 from save_load import save_game, load_game
 
-
-
 pygame.init()
-SCREEN_WIDTH = WIDTH
-SCREEN_HEIGHT = HEIGHT
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("The Crystal of Eldoria")
 FONT = pygame.font.SysFont("arial", 24)
 
-# Load assets (replace with your sprite paths)
-# player_img = pygame.image.load("assets/img/Knight/Attack/0.png").convert_alpha()
-# enemy_img = pygame.image.load("assets/img/Bandit/Idle/0.png").convert_alpha()
+# Load assets
 background_img = pygame.image.load("assets/img/Background/background.png").convert_alpha()
-
-#load victory and defeat images
-
-victory_img = pygame.image.load('assets/img/Icons/victory.png').convert_alpha()  # Add at the top of your script where other imports are made
-
-defeat_img = pygame.image.load('assets/img/Icons/defeat.png').convert_alpha()
-
+victory_img = pygame.image.load("assets/img/Icons/victory.png").convert_alpha()
+defeat_img = pygame.image.load("assets/img/Icons/defeat.png").convert_alpha()
 logo_img = pygame.image.load("assets/img/Logo/game_logo.png").convert_alpha()
 logo_img = pygame.transform.scale(logo_img, (250, 150))
-logo_x = (SCREEN_WIDTH - logo_img.get_width()) // 2
+logo_x = (WIDTH - logo_img.get_width()) // 2
 logo_y = 50
-
-mainmenu_img = pygame.image.load('assets/img/Background/home_page_background.jpg').convert_alpha()
+mainmenu_img = pygame.image.load("assets/img/Background/home_page_background.jpg").convert_alpha()
 mainmenu_img = pygame.transform.scale(mainmenu_img, (WIDTH, HEIGHT))
 
+# Enemy setup
+bandit = Enemy(550, 380, "Bandit")
+wizard = Enemy(500, 248, "Wizard")
+bandit_health_bar = HealthBar(550, 50, "Bandit", bandit.health, 50)
+wizard_health_bar = HealthBar(550, 50, "Wizard", wizard.health, 50)
+
+# Button setup
 play_button_rect = pygame.Rect(WIDTH // 2 - 76, HEIGHT // 2 - 60, 150, 50)
 load_button_rect = pygame.Rect(WIDTH // 2 - 76, HEIGHT // 2 + 5, 150, 50)
 quit_button_rect = pygame.Rect(WIDTH // 2 - 76, HEIGHT // 2 + 70, 150, 50)
-
 restart_button_rect = pygame.Rect(WIDTH // 2 - 76, HEIGHT // 2 + 5, 150, 50)
 next_level_button_rect = pygame.Rect(WIDTH // 2 - 76, HEIGHT // 2 + 5, 150, 50)
 end_game_button_rect = pygame.Rect(WIDTH // 2 - 76, HEIGHT // 2 + 70, 150, 50)
 
-
-knight = Player(250, 370,"Knight")
-bandit = Enemy(550, 380,"Bandit")
-wizard = Enemy(500, 248,"Wizard")
-
-
-knight_health_bar = HealthBar(100,50 ,"Knight", knight.health, 100)
-bandit1_health_bar = HealthBar(550,50 ,"Bandit", bandit.health, 50)
-wizard_health_bar = HealthBar(550,50 ,"Wizard", wizard.health, 50)
-
-
 def animate_screen():
     screen.blit(mainmenu_img, (0, 0))
-   
 
 def display_menu():
     running = True
@@ -70,34 +51,27 @@ def display_menu():
     font = pygame.font.SysFont('Comic Sans MS', 25)
 
     while running:
-        animate_screen()  # Background animation
-        screen.blit(logo_img, (logo_x, logo_y))  # Logo
-
+        animate_screen()
+        screen.blit(logo_img, (logo_x, logo_y))
         mouse_pos = pygame.mouse.get_pos()
 
-        # Handle events
-
-        for event in pygame.event.get():  # it uses a for loop to iterate through events
-            if event.type == pygame.QUIT: # checks for quit events by exiting the loop by setting run to False.
-
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 running = False
 
-            # Mouse click
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if buttons[0][1].collidepoint(mouse_pos):
                     username = get_username()
-                    display_combat(username) 
+                    player = Player(250, 370, username, character_type="Knight")
+                    display_combat(player)
                 elif buttons[1][1].collidepoint(mouse_pos):
                     loaded_player, level = load_game()
                     if loaded_player:
-                        knight = loaded_player
-                        display_combat(knight.name)
+                        display_combat(loaded_player)
                 elif buttons[2][1].collidepoint(mouse_pos):
-                    pygame.quit()   # to close the game properly.
-
+                    pygame.quit()
                     sys.exit()
 
-            # Keyboard navigation
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     selected_button = (selected_button - 1) % len(buttons)
@@ -105,80 +79,52 @@ def display_menu():
                     selected_button = (selected_button + 1) % len(buttons)
                 elif event.key == pygame.K_RETURN:
                     if selected_button == 0:
-                       username = get_username()
-                       display_combat(username)  # Replace with actual combat function
-
+                        username = get_username()
+                        player = Player(250, 370, username, character_type="Knight")
+                        display_combat(player)
                     elif selected_button == 1:
                         loaded_player, level = load_game()
                         if loaded_player:
-                            knight = loaded_player
-                            display_combat(knight.name)
+                            display_combat(loaded_player)
                     elif selected_button == 2:
                         pygame.quit()
                         sys.exit()
 
-        # Draw buttons
         for i, (label, rect, highlight_color) in enumerate(buttons):
-
-            # Always fill button background first
             pygame.draw.rect(screen, BLACK, rect, border_radius=10)
-            # Hover or keyboard selection effect
             if rect.collidepoint(mouse_pos) or selected_button == i:
                 pygame.draw.rect(screen, highlight_color, rect, border_radius=10, width=4)
-            else:
-                pygame.draw.rect(screen, BLACK, rect, border_radius=10)
-
-            # Draw text
             text_surf = font.render(label, True, WHITE)
             text_rect = text_surf.get_rect(center=rect.center)
             screen.blit(text_surf, text_rect)
 
         pygame.display.flip()
 
-    return None
-
-
-
-def display_combat(username):
-
+def display_combat(player):
+    knight = player
+    knight_health_bar = HealthBar(100, 50, knight.name, knight.health, knight.max_health())
+    current_enemy = bandit
     running = True
     clock = pygame.time.Clock()
     end_state = None
-    current_enemy = bandit
-
     selected_button = 0
-    buttons_of_victory = [
-        ("Next Level", next_level_button_rect, YELLOW),
-        ("End Game", end_game_button_rect, RED)
-    ]
 
-    buttons_of_defeat = [
-        ("Restart", restart_button_rect, YELLOW),
-        ("End Game", end_game_button_rect, RED)
-    ]
-
+    buttons_of_victory = [("Next Level", next_level_button_rect, YELLOW), ("End Game", end_game_button_rect, RED)]
+    buttons_of_defeat = [("Restart", restart_button_rect, YELLOW), ("End Game", end_game_button_rect, RED)]
     font = pygame.font.SysFont('Comic Sans MS', 25)
 
-
-    print(f"This is the username {username}")
-
     while running:
-
         screen.blit(background_img, (0, -50))
-
         knight.update()
         knight.draw()
         current_enemy.update()
         current_enemy.draw()
-
         knight_health_bar.draw(knight.health)
 
-        # Show correct health bar for current enemy
         if current_enemy.name == "Bandit":
-            bandit1_health_bar.draw(current_enemy.health)
+            bandit_health_bar.draw(current_enemy.health)
         elif current_enemy.name == "Wizard":
             wizard_health_bar.draw(current_enemy.health)
-
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -186,7 +132,6 @@ def display_combat(username):
                 sys.exit()
 
             if end_state:
-                # Keyboard navigation
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
                         selected_button = (selected_button - 1) % len(buttons_of_victory)
@@ -194,81 +139,54 @@ def display_combat(username):
                         selected_button = (selected_button + 1) % len(buttons_of_victory)
                     elif event.key == pygame.K_RETURN:
                         if end_state == "victory":
-                            if selected_button == 0:  # Next Level
-                                
-                                print(f"Congratulations {username}! You leveled up to level {knight.level}!")
-                                # Switch enemy based on level
+                            if selected_button == 0:
                                 if knight.level == 2:
                                     current_enemy = wizard
-                                # Restart stats
                                 knight.next()
                                 save_game(knight, knight.level)
                                 end_state = None
                                 selected_button = 0
-                            elif selected_button == 1:  # End Game
+                            elif selected_button == 1:
                                 running = False
                         elif end_state == "defeat":
-                            if selected_button == 0:  # Restart same level
+                            if selected_button == 0:
                                 knight.restart()
                                 save_game(knight, knight.level)
                                 end_state = None
                                 selected_button = 0
                             elif selected_button == 1:
                                 running = False
-                        
-        
-            # Handle combat actions
+
             elif event.type == pygame.KEYDOWN:
-                # Press ESC to return to main menu
                 if event.key == pygame.K_ESCAPE:
                     running = False
-                 # Handle combat actions only on key press
                 elif event.key == pygame.K_a:
-                    result = combat(knight, current_enemy, keys = 1)
+                    result = combat(knight, current_enemy, keys=1)
                     if result in ("victory", "defeat"):
                         end_state = result
                 elif event.key == pygame.K_h:
-                    result = combat(knight, current_enemy, keys = 2)
-                    if result == "victory" or result == "defeat" or result == "fled":
+                    result = combat(knight, current_enemy, keys=2)
+                    if result in ("victory", "defeat", "fled"):
                         running = False
-                elif event.key == pygame.K_ESCAPE:
-                    running = False
 
         if end_state == "victory":
             screen.blit(victory_img, (260, 200))
-            # Draw buttons
             for i, (label, rect, highlight_color) in enumerate(buttons_of_victory):
-
-                # Always fill button background first
                 pygame.draw.rect(screen, BLACK, rect, border_radius=10)
-                # Hover or keyboard selection effect
                 if selected_button == i:
                     pygame.draw.rect(screen, highlight_color, rect, border_radius=10, width=4)
-                else:
-                    pygame.draw.rect(screen, BLACK, rect, border_radius=10)
-
-                # Draw text
                 text_surf = font.render(label, True, WHITE)
                 text_rect = text_surf.get_rect(center=rect.center)
                 screen.blit(text_surf, text_rect)
         elif end_state == "defeat":
             screen.blit(defeat_img, (285, 200))
-            # Draw buttons
             for i, (label, rect, highlight_color) in enumerate(buttons_of_defeat):
-
-                # Always fill button background first
                 pygame.draw.rect(screen, BLACK, rect, border_radius=10)
-                # Hover or keyboard selection effect
                 if selected_button == i:
                     pygame.draw.rect(screen, highlight_color, rect, border_radius=10, width=4)
-                else:
-                    pygame.draw.rect(screen, BLACK, rect, border_radius=10)
-
-                # Draw text
                 text_surf = font.render(label, True, WHITE)
                 text_rect = text_surf.get_rect(center=rect.center)
                 screen.blit(text_surf, text_rect)
-                    
 
         pygame.display.flip()
         clock.tick(FPS)
