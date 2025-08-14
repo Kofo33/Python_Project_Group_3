@@ -6,6 +6,7 @@ from classes.enemy import Enemy
 from classes.health_bar import HealthBar
 from classes.player import Player
 from game_logic import combat, get_username
+from save_load import save_game, load_game
 
 
 
@@ -87,7 +88,10 @@ def display_menu():
                     username = get_username()
                     display_combat(username) 
                 elif buttons[1][1].collidepoint(mouse_pos):
-                    print("Load clicked")
+                    loaded_player, level = load_game()
+                    if loaded_player:
+                        knight = loaded_player
+                        display_combat(knight.name)
                 elif buttons[2][1].collidepoint(mouse_pos):
                     pygame.quit()   # to close the game properly.
 
@@ -105,7 +109,10 @@ def display_menu():
                        display_combat(username)  # Replace with actual combat function
 
                     elif selected_button == 1:
-                        print("Load selected")
+                        loaded_player, level = load_game()
+                        if loaded_player:
+                            knight = loaded_player
+                            display_combat(knight.name)
                     elif selected_button == 2:
                         pygame.quit()
                         sys.exit()
@@ -195,7 +202,7 @@ def display_combat(username):
                                     current_enemy = wizard
                                 # Restart stats
                                 knight.next()
-                                current_enemy.restart()
+                                save_game(knight, knight.level)
                                 end_state = None
                                 selected_button = 0
                             elif selected_button == 1:  # End Game
@@ -203,7 +210,7 @@ def display_combat(username):
                         elif end_state == "defeat":
                             if selected_button == 0:  # Restart same level
                                 knight.restart()
-                                current_enemy.restart()
+                                save_game(knight, knight.level)
                                 end_state = None
                                 selected_button = 0
                             elif selected_button == 1:
@@ -265,5 +272,3 @@ def display_combat(username):
 
         pygame.display.flip()
         clock.tick(FPS)
-
-
