@@ -44,7 +44,7 @@ def save_game(player, level_count):
 
     conn.commit()
     conn.close()
-    print("💾 Game saved to database.")
+    print("Game saved to database.")
 
 
 def load_game(name):
@@ -59,9 +59,9 @@ def load_game(name):
     if row:
         player = Player(250, 370, name=row[0], health=row[2], attack=row[3], level=row[1], xp=row[4])
         player.inventory = json.loads(row[5])
-        print(f"✅ Game loaded for {name}.")
+        print(f"Game loaded for {name}.")
         return player, player.level
     else:
-        print(f"⚠️ No saved game found for {name}.")
+        print(f"No saved game found for {name}.")
         return None, 1
 
