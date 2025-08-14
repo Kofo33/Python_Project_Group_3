@@ -76,7 +76,7 @@ def get_username():
     while input_active:
         screen.fill(BLACK)
         screen.blit(input_bg,(10,-50))
-        prompt_text = font.render("Enter your username:", True, y)
+        prompt_text = font.render("Enter your username:", True, YELLOW)
         screen.blit(prompt_text, (WIDTH // 2 - 150, HEIGHT // 2 - 50))
 
         # Draw input box
