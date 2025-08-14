@@ -5,7 +5,8 @@ from classes.constant import WIDTH, HEIGHT, FPS, WHITE, RED, BLACK,YELLOW
 from classes.enemy import Enemy
 from classes.health_bar import HealthBar
 from classes.player import Player
-from game_logic import combat
+from game_logic import combat, get_username
+
 
 
 pygame.init()
@@ -21,7 +22,9 @@ FONT = pygame.font.SysFont("arial", 24)
 background_img = pygame.image.load("assets/img/Background/background.png").convert_alpha()
 
 #load victory and defeat images
-victory_img = pygame.image.load('assets/img/Icons/victory.png').convert_alpha()
+
+victory_img = pygame.image.load('assets/img/Icons/victory.png').convert_alpha()  # Add at the top of your script where other imports are made
+
 defeat_img = pygame.image.load('assets/img/Icons/defeat.png').convert_alpha()
 
 logo_img = pygame.image.load("assets/img/Logo/game_logo.png").convert_alpha()
@@ -57,7 +60,7 @@ def display_menu():
     running = True
     selected_button = 0
     buttons = [
-        ("Play", play_button_rect, YELLOW),
+        ("New Game", play_button_rect, YELLOW),
         ("Load", load_button_rect, YELLOW),
         ("Exit", quit_button_rect, RED)
     ]
@@ -70,18 +73,22 @@ def display_menu():
         mouse_pos = pygame.mouse.get_pos()
 
         # Handle events
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+
+        for event in pygame.event.get():  # it uses a for loop to iterate through events
+            if event.type == pygame.QUIT: # checks for quit events by exiting the loop by setting run to False.
+
                 running = False
 
             # Mouse click
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if buttons[0][1].collidepoint(mouse_pos):
-                    display_combat()
+                    username = get_username()
+                    display_combat(username) 
                 elif buttons[1][1].collidepoint(mouse_pos):
                     print("Load clicked")
                 elif buttons[2][1].collidepoint(mouse_pos):
-                    pygame.quit()
+                    pygame.quit()   # to close the game properly.
+
                     sys.exit()
 
             # Keyboard navigation
@@ -92,7 +99,9 @@ def display_menu():
                     selected_button = (selected_button + 1) % len(buttons)
                 elif event.key == pygame.K_RETURN:
                     if selected_button == 0:
-                       display_combat()  # Replace with actual combat function
+                       username = get_username()
+                       display_combat(username)  # Replace with actual combat function
+
                     elif selected_button == 1:
                         print("Load selected")
                     elif selected_button == 2:
@@ -120,7 +129,9 @@ def display_menu():
     return None
 
 
-def display_combat():
+
+def display_combat(username):
+
     running = True
     clock = pygame.time.Clock()
     end_state = None
@@ -137,6 +148,9 @@ def display_combat():
     ]
 
     font = pygame.font.SysFont('Comic Sans MS', 25)
+
+
+    print(f"This is the username {username}")
 
     while running:
 
