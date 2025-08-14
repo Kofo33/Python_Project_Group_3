@@ -2,6 +2,15 @@
 
 import time
 import pygame
+import sys
+from classes.constant import WIDTH, HEIGHT, FPS, WHITE, RED, BLACK,YELLOW
+
+SCREEN_WIDTH = WIDTH
+SCREEN_HEIGHT = HEIGHT
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+input_bg = pygame.image.load("assets/img/Background/bg_username.png").convert_alpha()
+# input_bg = pygame.transform.scale(input_bg, (WIDTH, HEIGHT))
 
 def combat(player, enemy, keys):
     action = None
@@ -56,3 +65,42 @@ def combat(player, enemy, keys):
         return "defeat"
 
     return None
+
+
+def get_username():
+    """Prompt player to enter a username before the game starts."""
+    username = ""
+    font = pygame.font.SysFont('Comic Sans MS', 25)
+    input_active = True
+
+    while input_active:
+        screen.fill(BLACK)
+        screen.blit(input_bg,(10,-50))
+        prompt_text = font.render("Enter your username:", True, YELLOW)
+        screen.blit(prompt_text, (WIDTH // 2 - 150, HEIGHT // 2 - 50))
+
+        # Draw input box
+        input_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2, 200, 40)
+        pygame.draw.rect(screen, YELLOW, input_rect, 2)
+
+        # Render current text
+        text_surface = font.render(username, True, WHITE)
+        screen.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
+
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN and username.strip() != "":
+                    input_active = False  # Exit loop when username entered
+                elif event.key == pygame.K_BACKSPACE:
+                    username = username[:-1]
+                else:
+                    if len(username) < 15:  # limit name length
+                        username += event.unicode
+
+    return username
