@@ -7,8 +7,9 @@ SCREEN_HEIGHT = HEIGHT
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 class Player:
-    def __init__(self,x,y, name, health=100, attack=30, level=1, xp=0):
+    def __init__(self, x, y, name, character_type="Knight", health=100, attack=30, level=1, xp=0):
         self.name = name
+        self.character_type = character_type  # Used for asset loading
         self.health = health
         self.attack = attack
         self.level = level
@@ -25,43 +26,43 @@ class Player:
         self.action = 0  # 0: Idle, 1: Attack, 2: Hurt, 3: Death
         self.frame_index = 0
         self.animation_list = []
-        #load idle images
+
+        # Load idle images
         temp_list = []
         for i in range(8):
-            img = pygame.image.load(f'assets/img/{self.name}/Idle/{i}.png')
+            img = pygame.image.load(f'assets/img/{self.character_type}/Idle/{i}.png')
             img = pygame.transform.scale(img, (img.get_width() * 5, img.get_height() * 5))
             temp_list.append(img)
         self.animation_list.append(temp_list)
-        #load attack images
+
+        # Load attack images
         temp_list = []
         for i in range(8):
-            img = pygame.image.load(f'assets/img/{self.name}/Attack/{i}.png')
+            img = pygame.image.load(f'assets/img/{self.character_type}/Attack/{i}.png')
             img = pygame.transform.scale(img, (img.get_width() * 5, img.get_height() * 5))
             temp_list.append(img)
         self.animation_list.append(temp_list)
-        #load hurt images
+
+        # Load hurt images
         temp_list = []
         for i in range(3):
-            img = pygame.image.load(f'assets/img/{self.name}/Hurt/{i}.png')
-            img = pygame.transform.scale(img, (img.get_width() * 5
-            , img.get_height() * 5
-            ))
+            img = pygame.image.load(f'assets/img/{self.character_type}/Hurt/{i}.png')
+            img = pygame.transform.scale(img, (img.get_width() * 5, img.get_height() * 5))
             temp_list.append(img)
         self.animation_list.append(temp_list)
-        #load death images
+
+        # Load death images
         temp_list = []
         for i in range(10):
-            img = pygame.image.load(f'assets/img/{self.name}/Death/{i}.png')
-            img = pygame.transform.scale(img, (img.get_width() * 5
-            , img.get_height() * 5
-            ))
+            img = pygame.image.load(f'assets/img/{self.character_type}/Death/{i}.png')
+            img = pygame.transform.scale(img, (img.get_width() * 5, img.get_height() * 5))
             temp_list.append(img)
         self.animation_list.append(temp_list)
+
+        # Set initial image and position
         self.image = self.animation_list[self.action][self.frame_index]
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
-
-
 
     def update(self):
             animation_cooldown = 100
