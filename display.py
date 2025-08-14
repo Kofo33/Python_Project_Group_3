@@ -16,12 +16,13 @@ pygame.display.set_caption("The Crystal of Eldoria")
 FONT = pygame.font.SysFont("arial", 24)
 
 # Load assets (replace with your sprite paths)
-player_img = pygame.image.load("assets/img/Knight/Attack/0.png").convert_alpha()
+player_img = pygame.image.load("assets/img/Knight/Attack/0.png").convert_alpha()  #  Load the background image 
 enemy_img = pygame.image.load("assets/img/Bandit/Idle/0.png").convert_alpha()
 background_img = pygame.image.load("assets/img/Background/background.png").convert_alpha()
 restart_img = pygame.image.load('assets/img/Icons/restart.png').convert_alpha()
 #load victory and defeat images
-victory_img = pygame.image.load('assets/img/Icons/victory.png').convert_alpha()
+victory_img = pygame.image.load('assets/img/Icons/victory.png').convert_alpha()  # Add at the top of your script where other imports are made
+
 defeat_img = pygame.image.load('assets/img/Icons/defeat.png').convert_alpha()
 
 logo_img = pygame.image.load("assets/img/Logo/game_logo.png").convert_alpha()
@@ -65,8 +66,8 @@ def display_menu():
         mouse_pos = pygame.mouse.get_pos()
 
         # Handle events
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        for event in pygame.event.get():  # it uses a for loop to iterate through events
+            if event.type == pygame.QUIT: # checks for quit events by exiting the loop by setting run to False.
                 running = False
 
             # Mouse click
@@ -76,7 +77,7 @@ def display_menu():
                 elif buttons[1][1].collidepoint(mouse_pos):
                     print("Load clicked")
                 elif buttons[2][1].collidepoint(mouse_pos):
-                    pygame.quit()
+                    pygame.quit()   # to close the game properly.
                     sys.exit()
 
             # Keyboard navigation
@@ -166,7 +167,7 @@ def display_combat():
         if end_state == "victory":
             screen.blit(victory_img, (250, 200))
         elif end_state == "defeat":
-            screen.blit(defeat_img, (250, 200))
+            screen.blit(defeat_img, (250, 200)) # to place the image at the top-left corner.
                     
 
         pygame.display.flip()
