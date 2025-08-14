@@ -46,10 +46,12 @@ end_game_button_rect = pygame.Rect(WIDTH // 2 - 76, HEIGHT // 2 + 70, 150, 50)
 
 knight = Player(250, 370,"Knight")
 bandit = Enemy(550, 380,"Bandit")
+wizard = Enemy(500, 248,"Wizard")
 
 
 knight_health_bar = HealthBar(100,50 ,"Knight", knight.health, 100)
 bandit1_health_bar = HealthBar(550,50 ,"Bandit", bandit.health, 50)
+wizard_health_bar = HealthBar(550,50 ,"Wizard", wizard.health, 50)
 
 
 def animate_screen():
@@ -135,6 +137,7 @@ def display_combat(username):
     running = True
     clock = pygame.time.Clock()
     end_state = None
+    current_enemy = bandit
 
     selected_button = 0
     buttons_of_victory = [
@@ -158,12 +161,16 @@ def display_combat(username):
 
         knight.update()
         knight.draw()
-        bandit.update()
-        bandit.draw()
+        current_enemy.update()
+        current_enemy.draw()
 
         knight_health_bar.draw(knight.health)
-        bandit1_health_bar.draw(bandit.health)
 
+        # Show correct health bar for current enemy
+        if current_enemy.name == "Bandit":
+            bandit1_health_bar.draw(current_enemy.health)
+        elif current_enemy.name == "Wizard":
+            wizard_health_bar.draw(current_enemy.health)
 
 
         for event in pygame.event.get():
@@ -179,15 +186,28 @@ def display_combat(username):
                     elif event.key == pygame.K_DOWN:
                         selected_button = (selected_button + 1) % len(buttons_of_victory)
                     elif event.key == pygame.K_RETURN:
-                        if selected_button == 0:
-                            knight.restart()
-                            bandit.restart()
-                            end_state = None
-                            selected_button = 0  
-                        elif selected_button == 1:
-                            knight.restart()
-                            bandit.restart()
-                            running = False
+                        if end_state == "victory":
+                            if selected_button == 0:  # Next Level
+                                
+                                print(f"Congratulations {username}! You leveled up to level {knight.level}!")
+                                # Switch enemy based on level
+                                if knight.level == 2:
+                                    current_enemy = wizard
+                                # Restart stats
+                                knight.next()
+                                current_enemy.restart()
+                                end_state = None
+                                selected_button = 0
+                            elif selected_button == 1:  # End Game
+                                running = False
+                        elif end_state == "defeat":
+                            if selected_button == 0:  # Restart same level
+                                knight.restart()
+                                current_enemy.restart()
+                                end_state = None
+                                selected_button = 0
+                            elif selected_button == 1:
+                                running = False
                         
         
             # Handle combat actions
@@ -197,11 +217,11 @@ def display_combat(username):
                     running = False
                  # Handle combat actions only on key press
                 elif event.key == pygame.K_a:
-                    result = combat(knight, bandit, keys = 1)
+                    result = combat(knight, current_enemy, keys = 1)
                     if result in ("victory", "defeat"):
                         end_state = result
                 elif event.key == pygame.K_h:
-                    result = combat(knight, bandit, keys = 2)
+                    result = combat(knight, current_enemy, keys = 2)
                     if result == "victory" or result == "defeat" or result == "fled":
                         running = False
                 elif event.key == pygame.K_ESCAPE:

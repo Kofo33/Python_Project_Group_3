@@ -45,7 +45,7 @@ def combat(player, enemy, keys):
         leveled_up = player.gain_xp(50)
         if leveled_up:
             print(f"{player.name} leveled up to level {player.level}! Heal skill upgraded.")
-        if enemy.name == "Wolf":
+        if enemy.name == "Wizard":
             new_weapon = {"name": "Sword", "bonus": 0}
             player.add_item(new_weapon)
             player.equip_weapon("Sword")
