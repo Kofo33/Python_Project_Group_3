@@ -65,9 +65,11 @@ def display_menu():
                     player = Player(250, 370, username, character_type="Knight")
                     display_combat(player)
                 elif buttons[1][1].collidepoint(mouse_pos):
-                    loaded_player, level = load_game()
+                    username = get_username()  # Ask which name to load
+                    loaded_player, level = load_game(username)
                     if loaded_player:
                         display_combat(loaded_player)
+
                 elif buttons[2][1].collidepoint(mouse_pos):
                     pygame.quit()
                     sys.exit()
@@ -83,9 +85,11 @@ def display_menu():
                         player = Player(250, 370, username, character_type="Knight")
                         display_combat(player)
                     elif selected_button == 1:
-                        loaded_player, level = load_game()
+                        username = get_username()
+                        loaded_player, level = load_game(username)
                         if loaded_player:
                             display_combat(loaded_player)
+
                     elif selected_button == 2:
                         pygame.quit()
                         sys.exit()
