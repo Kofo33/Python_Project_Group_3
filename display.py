@@ -16,8 +16,6 @@ pygame.display.set_caption("The Crystal of Eldoria")
 FONT = pygame.font.SysFont("arial", 24)
 
 # Load assets (replace with your sprite paths)
-# player_img = pygame.image.load("assets/img/Knight/Attack/0.png").convert_alpha()
-# enemy_img = pygame.image.load("assets/img/Bandit/Idle/0.png").convert_alpha()
 background_img = pygame.image.load("assets/img/Background/background.png").convert_alpha()
 
 #load victory and defeat images
