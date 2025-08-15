@@ -7,6 +7,12 @@ from classes.constant import WIDTH, HEIGHT
 DB_FILE = "game_database.db"
 
 def init_db():
+    """
+    Initializes the SQLite database by creating the 'player' table if it doesn't exist.
+
+    The table stores player information including name, level, health, attack power,
+    experience points (xp), and inventory (as a JSON string).
+    """ 
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
     cursor.execute("""
@@ -23,6 +29,15 @@ def init_db():
     conn.close()
 
 def save_game(player, level_count):
+    """
+    Saves the current game state of a player to the database.
+
+    If the player already exists in the database, their data is updated.
+
+    Args:
+        player (Player): The player object containing game state to be saved.
+        level_count (int): The current level count of the game (not stored but may be used elsewhere).
+    """
     init_db()
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
@@ -48,6 +63,17 @@ def save_game(player, level_count):
 
 
 def load_game(name):
+    """
+    Loads a saved game state for a player from the database.
+
+    Args:
+        name (str): The name of the player whose game state is to be loaded.
+
+    Returns:
+        tuple: A tuple containing the Player object and the player's level.
+               If no saved game is found, returns (None, 1).
+    """
+    
     init_db()
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
