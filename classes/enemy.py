@@ -16,10 +16,12 @@ class Enemy:
         # Increasing skill (hit chance) for enemies
         if name == "Bandit":
             self.skill = 40
-        elif name == "Wizard":
+        elif name == "Bandit2":
             self.skill = 50
-        else:  # e.g., Shadow Knight
+        elif name == "Bringer":  # e.g., Shadow Knight
             self.skill = 60
+        elif name == "Wizard":
+            self.skill = 70
         self.action = 0 # 0: Idle, 1: Attack, 2: Hurt, 3: Death
         self.frame_index = 0
         self.animation_list = []
@@ -81,8 +83,15 @@ class Enemy:
         self.attack = 70 + (self.level - 1) * 5
         if self.name == "Bandit":
             self.skill = 40 + (self.level - 1) * 2
-        elif self.name == "Wizard":
+        elif self.name == "Bandit2":
             self.skill = 50 + (self.level - 1) * 2
+        elif self.name == "Bringer":
+            self.skill = 60 + (self.level - 1) * 2
+        elif self.name == "Wizard":
+            self.skill = 70 + (self.level - 1) * 2
+        elif self.name == "Overlord":
+            self.skill = 90 + (self.level - 1) * 2
+        
        
 	
     def idle(self):
@@ -97,9 +106,6 @@ class Enemy:
         damage = self.attack + random.randint(-2, 2)
         player.health -= max(0, damage)
         player.hurt()
-        # if player.health <= 0:
-        #     player.death()
-        #     print(f"{player.name} has been defeated!")
         self.action = 1
         self.frame_index = 0
         self.update_time = pygame.time.get_ticks()
