@@ -1,17 +1,18 @@
-import sys
-import pygame
-import random
+# Imports necessary modules for the display logic.
+import sys      # Imports the Python sys module to handle system-level operations, like exiting the game (sys.exit()).
+import pygame   #   Imports Pygame for rendering graphics (sprites, text, buttons)
+import random    #   Imports Python’s random module
 from classes.constant import WIDTH, HEIGHT, FPS, WHITE, RED, BLACK,YELLOW
 from classes.enemy import Enemy
-from classes.health_bar import HealthBar
+from classes.health_bar import HealthBar     
 from classes.player import Player
 from game_logic import combat, get_username
 
 
-pygame.init()
-SCREEN_WIDTH = WIDTH
-SCREEN_HEIGHT = HEIGHT
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.init()    # Initializes Pygame’s modules (graphics, input, etc.).
+SCREEN_WIDTH = WIDTH   # Sets the window width (e.g., 800, from classes.constant).
+SCREEN_HEIGHT = HEIGHT  #  Sets the window height (e.g., 600)
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))    # Creates an 800x600 game window.
 pygame.display.set_caption("The Crystal of Eldoria")
 FONT = pygame.font.SysFont("arial", 24)
 
@@ -21,20 +22,20 @@ FONT = pygame.font.SysFont("arial", 24)
 background_img = pygame.image.load("assets/img/Background/background.png").convert_alpha()
 
 #load victory and defeat images
-victory_img = pygame.image.load('assets/img/Icons/victory.png').convert_alpha()  # Add at the top of your script where other imports are made
+victory_img = pygame.image.load('assets/img/Icons/victory.png').convert_alpha()  # .convert_alpha() for transparency.
 
 defeat_img = pygame.image.load('assets/img/Icons/defeat.png').convert_alpha()
 
 logo_img = pygame.image.load("assets/img/Logo/game_logo.png").convert_alpha()
-logo_img = pygame.transform.scale(logo_img, (250, 150))
+logo_img = pygame.transform.scale(logo_img, (250, 150))  # Scales the logo to 250x150 pixels.
 logo_x = (SCREEN_WIDTH - logo_img.get_width()) // 2
 logo_y = 50
 
-mainmenu_img = pygame.image.load('assets/img/Background/home_page_background.jpg').convert_alpha()
-mainmenu_img = pygame.transform.scale(mainmenu_img, (WIDTH, HEIGHT))
+mainmenu_img = pygame.image.load('assets/img/Background/home_page_background.jpg').convert_alpha()  # .convert_alpha() for transparency.
+mainmenu_img = pygame.transform.scale(mainmenu_img, (WIDTH, HEIGHT))  # Scales the logo to 250x150 pixels.
 
-play_button_rect = pygame.Rect(WIDTH // 2 - 76, HEIGHT // 2 - 60, 150, 50)
-load_button_rect = pygame.Rect(WIDTH // 2 - 76, HEIGHT // 2 + 5, 150, 50)
+play_button_rect = pygame.Rect(WIDTH // 2 - 76, HEIGHT // 2 - 60, 150, 50) # Creates a 150x50 button at (x=324, y=240) for “New Game”.
+load_button_rect = pygame.Rect(WIDTH // 2 - 76, HEIGHT // 2 + 5, 150, 50)  # Button at (324, 305) for “Load”.
 quit_button_rect = pygame.Rect(WIDTH // 2 - 76, HEIGHT // 2 + 70, 150, 50)
 
 restart_button_rect = pygame.Rect(WIDTH // 2 - 76, HEIGHT // 2 + 5, 150, 50)
@@ -42,21 +43,23 @@ next_level_button_rect = pygame.Rect(WIDTH // 2 - 76, HEIGHT // 2 + 5, 150, 50)
 end_game_button_rect = pygame.Rect(WIDTH // 2 - 76, HEIGHT // 2 + 70, 150, 50)
 
 
-knight = Player(250, 370,"Knight")
-bandit = Enemy(550, 380,"Bandit")
+knight = Player(250, 370,"Knight")  # Creates a Player named “Knight” at position (250, 370).
+bandit = Enemy(550, 380,"Bandit")   #  Creates a Bandit enemy (Level 1) at (550, 380).
+wizard = Enemy(500, 248,"Wizard")
 
 
-knight_health_bar = HealthBar(100,50 ,"Knight", knight.health, 100)
-bandit1_health_bar = HealthBar(550,50 ,"Bandit", bandit.health, 50)
+knight_health_bar = HealthBar(100,50 ,"Knight", knight.health, 100) # Creates a health bar for Knight at (100, 50) with initial health and max health of 100.
+bandit1_health_bar = HealthBar(550,50 ,"Bandit", bandit.health, 50) # Health bar for Bandit at (550, 50), max health 50.
+wizard_health_bar = HealthBar(550,50 ,"Wizard", wizard.health, 50)
 
 
 def animate_screen():
-    screen.blit(mainmenu_img, (0, 0))
+    screen.blit(mainmenu_img, (0, 0))   # Renders the menu background at the top-left corner.
    
 
 def display_menu():
     running = True
-    selected_button = 0
+    selected_button = 0     # Tracks the currently selected button (0=New Game, 1=Load, 2=Exit) for keyboard navigation.
     buttons = [
         ("New Game", play_button_rect, YELLOW),
         ("Load", load_button_rect, YELLOW),
@@ -66,23 +69,25 @@ def display_menu():
 
     while running:
         animate_screen()  # Background animation
-        screen.blit(logo_img, (logo_x, logo_y))  # Logo
-
-        mouse_pos = pygame.mouse.get_pos()
+        screen.blit(logo_img, (logo_x, logo_y))  # Draws the scaled logo at (275, 50).
+        mouse_pos = pygame.mouse.get_pos()      
 
         # Handle events
+
         for event in pygame.event.get():  # it uses a for loop to iterate through events
             if event.type == pygame.QUIT: # checks for quit events by exiting the loop by setting run to False.
+
                 running = False
 
             # Mouse click
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if buttons[0][1].collidepoint(mouse_pos):
-                    username = get_username()
-                    display_combat(username) 
-                elif buttons[1][1].collidepoint(mouse_pos):
+            if event.type == pygame.MOUSEBUTTONDOWN: #  Detects a mouse click.
+                if buttons[0][1].collidepoint(mouse_pos):   #  Checks if the click is on the “New Game” button.
+                    username = get_username()    # Calls get_username (assumed to prompt for a name) and stores the result.
+                    display_combat(username)     # Starts combat with the username.
+                elif buttons[1][1].collidepoint(mouse_pos):   # Prints “Load clicked” (placeholder for database load).
                     print("Load clicked")
-                elif buttons[2][1].collidepoint(mouse_pos):
+                elif buttons[2][1].collidepoint(mouse_pos):  # Exits the game with pygame.quit() and sys.exit().
+
                     pygame.quit()   # to close the game properly.
                     sys.exit()
 
@@ -118,15 +123,18 @@ def display_menu():
             text_rect = text_surf.get_rect(center=rect.center)
             screen.blit(text_surf, text_rect)
 
-        pygame.display.flip()
+        pygame.display.flip()  # Updates the screen to show the menu.
 
     return None
 
 
+
 def display_combat(username):
+
     running = True
     clock = pygame.time.Clock()
     end_state = None
+    current_enemy = bandit
 
     selected_button = 0
     buttons_of_victory = [
@@ -150,12 +158,16 @@ def display_combat(username):
 
         knight.update()
         knight.draw()
-        bandit.update()
-        bandit.draw()
+        current_enemy.update()
+        current_enemy.draw()
 
         knight_health_bar.draw(knight.health)
-        bandit1_health_bar.draw(bandit.health)
 
+        # Show correct health bar for current enemy
+        if current_enemy.name == "Bandit":
+            bandit1_health_bar.draw(current_enemy.health)
+        elif current_enemy.name == "Wizard":
+            wizard_health_bar.draw(current_enemy.health)
 
 
         for event in pygame.event.get():
@@ -171,15 +183,28 @@ def display_combat(username):
                     elif event.key == pygame.K_DOWN:
                         selected_button = (selected_button + 1) % len(buttons_of_victory)
                     elif event.key == pygame.K_RETURN:
-                        if selected_button == 0:
-                            knight.restart()
-                            bandit.restart()
-                            end_state = None
-                            selected_button = 0  
-                        elif selected_button == 1:
-                            knight.restart()
-                            bandit.restart()
-                            running = False
+                        if end_state == "victory":
+                            if selected_button == 0:  # Next Level
+                                
+                                print(f"Congratulations {username}! You leveled up to level {knight.level}!")
+                                # Switch enemy based on level
+                                if knight.level == 2:
+                                    current_enemy = wizard
+                                # Restart stats
+                                knight.next()
+                                current_enemy.restart()
+                                end_state = None
+                                selected_button = 0
+                            elif selected_button == 1:  # End Game
+                                running = False
+                        elif end_state == "defeat":
+                            if selected_button == 0:  # Restart same level
+                                knight.restart()
+                                current_enemy.restart()
+                                end_state = None
+                                selected_button = 0
+                            elif selected_button == 1:
+                                running = False
                         
         
             # Handle combat actions
@@ -189,11 +214,11 @@ def display_combat(username):
                     running = False
                  # Handle combat actions only on key press
                 elif event.key == pygame.K_a:
-                    result = combat(knight, bandit, keys = 1)
+                    result = combat(knight, current_enemy, keys = 1)
                     if result in ("victory", "defeat"):
                         end_state = result
                 elif event.key == pygame.K_h:
-                    result = combat(knight, bandit, keys = 2)
+                    result = combat(knight, current_enemy, keys = 2)
                     if result == "victory" or result == "defeat" or result == "fled":
                         running = False
                 elif event.key == pygame.K_ESCAPE:
@@ -235,7 +260,7 @@ def display_combat(username):
                 screen.blit(text_surf, text_rect)
                     
 
-        pygame.display.flip()
-        clock.tick(FPS)
+        pygame.display.flip()   # Refreshes the screen.
+        clock.tick(FPS)          # Limits to 60 FPS.
 
 

@@ -172,6 +172,14 @@ class Player:
         self.idle()
         print(f"{self.name} has been restarted.")
 
+    def next(self):
+        self.health = self.max_health()
+        self.xp = 0
+        self.update_stats()
+        self.equipped_weapon = self.inventory[0]
+        self.idle()
+        print(f"{self.name} has moved to the next level.")
+
 
     def hurt(self):
         #set variables to hurt animation

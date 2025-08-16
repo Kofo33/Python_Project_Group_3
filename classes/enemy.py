@@ -8,14 +8,15 @@ SCREEN_HEIGHT = HEIGHT
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 class Enemy:
-    def __init__(self,x,y, name="Goblin", health=50, attack=70):
+    def __init__(self,x,y, name="Bandit", health=50, attack=70, level=1):
         self.name = name
         self.health = health
         self.attack = attack
+        self.level = level
         # Increasing skill (hit chance) for enemies
-        if name == "Goblin":
+        if name == "Bandit":
             self.skill = 40
-        elif name == "Wolf":
+        elif name == "Wizard":
             self.skill = 50
         else:  # e.g., Shadow Knight
             self.skill = 60
@@ -74,7 +75,15 @@ class Enemy:
                 else:
                     self.idle()
 
-
+    def update_stats(self):
+        # Update stats based on level
+        self.health = 50 + (self.level - 1) * 10
+        self.attack = 70 + (self.level - 1) * 5
+        if self.name == "Bandit":
+            self.skill = 40 + (self.level - 1) * 2
+        elif self.name == "Wizard":
+            self.skill = 50 + (self.level - 1) * 2
+       
 	
     def idle(self):
         #set variables to idle animation
