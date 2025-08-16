@@ -26,16 +26,16 @@ def combat(player, enemy, keys):
     # Map key input to actions
     if keys == 1:  # Attack
         action = 1
-    elif keys == 2:  # Heal
+    elif keys == 2:  # Heal    # Sets action = 2 for Heal (key H).
         action = 2
-    elif keys == 3:  # Flee
+    elif keys == 3:  # Flee   #  Sets action = 3 for Flee (key ESC).
         action = 3
 
     # Execute the chosen action
     if action == 1:  # Attack action
         print("You chose to attack!")
         result, damage = player.use_skill("Basic Attack", enemy)
-        if damage == 0:
+        if damage == 0:  # If the attack misses, prints “You missed!”.
             print("You missed!")
         else:
             print(result)
@@ -108,15 +108,14 @@ def get_username():
         text_surface = font.render(username, True, WHITE)
         screen.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
 
-        pygame.display.flip()  # Update screen
+        pygame.display.flip()   # Updates the screen to show the prompt and input box.
 
-        # Handle events
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:  # Exit game
+        for event in pygame.event.get():      # it uses a for loop to iterate through events
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN:  # Exits the loop if Enter is pressed and the username isn’t empty.
                 if event.key == pygame.K_RETURN and username.strip() != "":
                     input_active = False  # Exit loop if username entered
                 elif event.key == pygame.K_BACKSPACE:

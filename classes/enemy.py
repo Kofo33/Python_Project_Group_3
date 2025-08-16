@@ -134,12 +134,7 @@ class Enemy:
         self.update_time = pygame.time.get_ticks()
 
     def attack_player(self, player):
-        """
-        Attempts to attack the player.
-
-        Returns:
-            int: Damage dealt (0 if missed)
-        """
+       
         # Hit chance check
         if random.randint(1, 100) > self.skill:
             return 0  # Miss
