@@ -10,17 +10,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # Create the ma
 # Load background image for username input screen
 input_bg = pygame.image.load("assets/img/Background/bg_username.png").convert_alpha()
 
-def combat(player, enemy, keys):
-    """
-    Handles a turn in combat between the player and the enemy.
-    
-    Args:
-        player: Player object
-        enemy: Enemy object
-        keys: Integer representing player's chosen action
-              1 = Attack, 2 = Heal, 3 = Flee
-    """
-    
+def combat(player, enemy, keys): 
     action = None  # Variable to store the chosen action
 
     # Map key input to actions
