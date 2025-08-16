@@ -7,12 +7,6 @@ from classes.constant import WIDTH, HEIGHT
 DB_FILE = "game_database.db"
 
 def init_db():
-    """
-    Initializes the SQLite database by creating the 'player' table if it doesn't exist.
-
-    The table stores player information including name, level, health, attack power,
-    experience points (xp), and inventory (as a JSON string).
-    """ 
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
     cursor.execute("""
@@ -29,15 +23,6 @@ def init_db():
     conn.close()
 
 def save_game(player, level_count):
-    """
-    Saves the current game state of a player to the database.
-
-    If the player already exists in the database, their data is updated.
-
-    Args:
-        player (Player): The player object containing game state to be saved.
-        level_count (int): The current level count of the game (not stored but may be used elsewhere).
-    """
     init_db()
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
@@ -62,18 +47,29 @@ def save_game(player, level_count):
     print("Game saved to database.")
 
 
+def fetch_all_players():
+    """Fetch all saved player data from the database."""
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM player")
+    rows = cursor.fetchall()
+    conn.close()
+
+    players = []
+    for row in rows:
+        player_data = {
+            "name": row[0],
+            "level": row[1],
+            "health": row[2],
+            "attack": row[3],
+            "xp": row[4],
+            "inventory": json.loads(row[5]) if row[5] else []
+        }
+        players.append(player_data)
+    return players
+
+
 def load_game(name):
-    """
-    Loads a saved game state for a player from the database.
-
-    Args:
-        name (str): The name of the player whose game state is to be loaded.
-
-    Returns:
-        tuple: A tuple containing the Player object and the player's level.
-               If no saved game is found, returns (None, 1).
-    """
-    
     init_db()
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
@@ -86,7 +82,7 @@ def load_game(name):
         player = Player(250, 370, name=row[0], health=row[2], attack=row[3], level=row[1], xp=row[4])
         player.inventory = json.loads(row[5])
         print(f"Game loaded for {name}.")
-        return player, player.level
+        return player
     else:
         print(f"No saved game found for {name}.")
         return None, 1
