@@ -1,20 +1,29 @@
-# game_logic.py
-
-import time
 import pygame
 import sys
-from classes.constant import WIDTH, HEIGHT, FPS, WHITE, RED, BLACK,YELLOW
+from classes.constant import WIDTH, HEIGHT, WHITE, BLACK, YELLOW  # Import constants for screen size and colors
 
+# Set up screen dimensions
 SCREEN_WIDTH = WIDTH
 SCREEN_HEIGHT = HEIGHT
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # Create the main game window
 
+# Load background image for username input screen
 input_bg = pygame.image.load("assets/img/Background/bg_username.png").convert_alpha()
-# input_bg = pygame.transform.scale(input_bg, (WIDTH, HEIGHT))
-
 
 def combat(player, enemy, keys):
-    action = None
+    """
+    Handles a turn in combat between the player and the enemy.
+    
+    Args:
+        player: Player object
+        enemy: Enemy object
+        keys: Integer representing player's chosen action
+              1 = Attack, 2 = Heal, 3 = Flee
+    """
+    
+    action = None  # Variable to store the chosen action
+
+    # Map key input to actions
     if keys == 1:  # Attack
         action = 1
     elif keys == 2:  # Heal
@@ -22,7 +31,8 @@ def combat(player, enemy, keys):
     elif keys == 3:  # Flee
         action = 3
 
-    if action == 1:
+    # Execute the chosen action
+    if action == 1:  # Attack action
         print("You chose to attack!")
         result, damage = player.use_skill("Basic Attack", enemy)
         if damage == 0:
@@ -30,52 +40,63 @@ def combat(player, enemy, keys):
         else:
             print(result)
 
-    elif action == 2:
+    elif action == 2:  # Heal action
         result, _ = player.use_skill("Heal")
         print(result)
 
-    elif action == 3:
+    elif action == 3:  # Flee action
         print("You fled the battle!")
-        return "fled"
+        return "fled"  # Exit combat
 
-    # Check if enemy is dead
+    # Check if the enemy has been defeated
     if enemy.health <= 0:
         enemy.death()
         print(f"{enemy.name} defeated!")
+
+        # Player gains XP
         leveled_up = player.gain_xp(50)
         if leveled_up:
             print(f"{player.name} leveled up to level {player.level}! Heal skill upgraded.")
+
+        # Special reward if enemy is "Wizard"
         if enemy.name == "Wizard":
             new_weapon = {"name": "Sword", "bonus": 0}
             player.add_item(new_weapon)
             player.equip_weapon("Sword")
             print("You obtained a sword from the enemy!")
-        return "victory"
 
-    # Enemy attacks after player’s turn
-    pygame.time.delay(500)
+        return "victory"  # Combat won
+
+    # Enemy attacks after player's turn
+    pygame.time.delay(500)  # Short delay before enemy attacks
     damage = enemy.attack_player(player)
     if damage == 0:
         print(f"{enemy.name} missed!")
     else:
         print(f"{enemy.name} deals {damage} damage to you!")
 
+    # Check if player has been defeated
     if player.health <= 0:
         player.death()
         print("You were defeated...")
         return "defeat"
 
-    return None
+    return None  # Continue combat if neither side has won
 
 def get_username():
-    """Prompt player to enter a username before the game starts."""
-    username = ""
-    font = pygame.font.SysFont('Comic Sans MS', 25)
-    input_active = True
+    """
+    Displays a username input screen and returns the entered username.
+    Ensures username is not empty and limited to 15 characters.
+    """
+    username = ""  # Stores the entered username
+    font = pygame.font.SysFont('Comic Sans MS', 25)  # Font for text display
+    input_active = True  # Flag to keep the input loop running
 
     while input_active:
-        screen.fill(BLACK)
-        screen.blit(input_bg,(10,-50))
+        screen.fill(BLACK)  # Fill screen with black
+        screen.blit(input_bg, (10, -50))  # Draw background image
+
+        # Display prompt text
         prompt_text = font.render("Enter your username:", True, YELLOW)
         screen.blit(prompt_text, (WIDTH // 2 - 150, HEIGHT // 2 - 50))
 
@@ -83,25 +104,25 @@ def get_username():
         input_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2, 200, 40)
         pygame.draw.rect(screen, YELLOW, input_rect, 2)
 
-        # Render current text
+        # Render the current typed text
         text_surface = font.render(username, True, WHITE)
         screen.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
 
-        pygame.display.flip()
+        pygame.display.flip()  # Update screen
 
+        # Handle events
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT:  # Exit game
                 pygame.quit()
                 sys.exit()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN and username.strip() != "":
-                    input_active = False  # Exit loop when username entered
+                    input_active = False  # Exit loop if username entered
                 elif event.key == pygame.K_BACKSPACE:
-                    username = username[:-1]
+                    username = username[:-1]  # Remove last character
                 else:
-                    if len(username) < 15:  # limit name length
-                        username += event.unicode
+                    if len(username) < 15:  # Limit username length
+                        username += event.unicode  # Add typed character
 
-    return username
-
+    return username  # Return the final username
