@@ -2,7 +2,7 @@ import sys
 import pygame
 from classes.constant import WIDTH, HEIGHT, FPS, WHITE, RED, BLACK, YELLOW
 from classes.enemy import Enemy
-from classes.health_bar import HealthBar
+from classes.health_bar import HealthBar     
 from classes.player import Player
 from game_logic import combat, get_username
 from save_load import fetch_all_players, save_game, load_game
@@ -50,7 +50,7 @@ def animate_screen():
 
 def display_menu():
     running = True
-    selected_button = 0
+    selected_button = 0     # Tracks the currently selected button (0=New Game, 1=Load, 2=Exit) for keyboard navigation.
     buttons = [
         ("New Game", play_button_rect, YELLOW),
         ("Load", load_button_rect, YELLOW),
@@ -108,7 +108,7 @@ def display_menu():
             text_rect = text_surf.get_rect(center=rect.center)
             screen.blit(text_surf, text_rect)
 
-        pygame.display.flip()
+        pygame.display.flip()  # Updates the screen to show the menu.
 
 def display_combat(player):
     knight = player
@@ -232,8 +232,8 @@ def display_combat(player):
                 text_rect = text_surf.get_rect(center=rect.center)
                 screen.blit(text_surf, text_rect)
 
-        pygame.display.flip()
-        clock.tick(FPS)
+        pygame.display.flip()   # Refreshes the screen.
+        clock.tick(FPS)          # Limits to 60 FPS.
 
 
 def load_game_screen():
