@@ -150,7 +150,10 @@ class Player:
         # Level up until XP is below threshold
         while self.xp >= xp_needed:
             self.xp -= xp_needed
-            self.level += 1
+
+            if self.level < 5:  # Max level is 5
+                self.level += 1
+                
             self.skills["Heal"]["level"] += 1
             self.update_stats()
             self.health = self.max_health()

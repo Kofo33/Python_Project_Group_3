@@ -168,6 +168,7 @@ class Enemy:
         self.health = health
         self.idle()
 
+
     def draw(self):
         """Draws the enemy on the screen."""
         screen.blit(self.image, self.rect)

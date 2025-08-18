@@ -198,8 +198,10 @@ def display_combat(player):
                             elif event.key == pygame.K_RETURN:
                                 running = False
                         elif end_state == "defeat":
-                            if event.key in [pygame.K_UP, pygame.K_DOWN]:
-                                selected_button = 0
+                            if event.key == pygame.K_UP:
+                                selected_button = (selected_button - 1) % len(buttons_of_victory)
+                            elif event.key == pygame.K_DOWN:
+                                selected_button = (selected_button + 1) % len(buttons_of_victory)
                             elif event.key == pygame.K_RETURN:
                                 if selected_button == 0:  # Restart
                                     knight.restart(display_level)
@@ -253,7 +255,7 @@ def display_combat(player):
                         end_state = result
                 elif event.key == pygame.K_h:  # Heal
                     result = combat(knight, current_enemy, keys=2)
-                    if result in ("victory", "defeat", "fled"):
+                    if result in ("victory", "defeat"):
                         running = False
 
         # Post-combat UI
@@ -320,5 +322,10 @@ def load_game_screen():
                     if rect.collidepoint(mouse_pos):  # Select player
                         return load_game(name)  # Load selected save
 
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                        running = False
+                        return None
+
         pygame.display.flip()
-        clock.tick(60)
+        clock.tick(FPS)

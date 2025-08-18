@@ -14,7 +14,7 @@ def combat(player, enemy, keys):
     action = None  # Variable to store the chosen action
 
     # Map key input to actions
-    if keys == 1:  # Attack
+    if keys == 1:  # Attack  # Sets actiion = 1 for Action (key A)
         action = 1
     elif keys == 2:  # Heal    # Sets action = 2 for Heal (key H).
         action = 2
@@ -48,13 +48,7 @@ def combat(player, enemy, keys):
         if leveled_up:
             print(f"{player.name} leveled up to level {player.level}! Heal skill upgraded.")
 
-        # Special reward if enemy is "Wizard"
-        if enemy.name == "Wizard":
-            new_weapon = {"name": "Sword", "bonus": 0}
-            player.add_item(new_weapon)
-            player.equip_weapon("Sword")
-            print("You obtained a sword from the enemy!")
-
+    
         return "victory"  # Combat won
 
     # Enemy attacks after player's turn
